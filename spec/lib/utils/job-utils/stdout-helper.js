@@ -3665,3 +3665,8 @@ module.exports.flashupdtdecode = fs
 module.exports.snmp = fs
     .readFileSync(__dirname+"/samplefiles/snmp.txt")
     .toString();
+
+module.exports.driveidOutput = fs
+    .readFileSync(__dirname+"/samplefiles/driveid.txt")
+    .toString();
+
