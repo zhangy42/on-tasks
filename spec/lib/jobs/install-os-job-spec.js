@@ -189,7 +189,7 @@ describe('Install OS Job', function () {
         job._fetchEsxOptionFromRepo = sinon.stub().resolves();
 
         return job._preHandling().then(function() {
-            expect(job.options.installDisk).to.equal('firstDisk');
+            expect(job.options.installDisk).to.equal('firstdisk');
         });
     });
 
