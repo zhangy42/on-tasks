@@ -10,6 +10,7 @@ describe('Install OS Job', function () {
     var subscribeRequestProfileStub;
     var subscribeRequestPropertiesStub;
     var subscribeHttpResponseStub;
+    var getInstallDiskSpy;
     var waterline;
     var job;
     var catalogData = {
@@ -50,6 +51,8 @@ describe('Install OS Job', function () {
             InstallOsJob.prototype, '_subscribeRequestProperties');
         subscribeHttpResponseStub = sinon.stub(
             InstallOsJob.prototype, '_subscribeHttpResponse');
+        getInstallDiskSpy = sinon.spy(
+            InstallOsJob.prototype, '_getInstallDisk');
         waterline.catalogs = {
             findMostRecent: sinon.stub().resolves()
         };
@@ -60,6 +63,8 @@ describe('Install OS Job', function () {
         subscribeRequestPropertiesStub.reset();
         subscribeHttpResponseStub.reset();
         waterline.catalogs.findMostRecent.reset();
+        getInstallDiskSpy.reset();
+
         job = new InstallOsJob(
             {
                 profile: 'testprofile',
@@ -167,6 +172,7 @@ describe('Install OS Job', function () {
         job.options.completionUri = 'rhel';
 
         return job._preHandling().then(function() {
+            expect(getInstallDiskSpy).to.have.been.calledOnce;
             expect(job.options.installDisk)
                 .to.equal('/dev/disk/by-id/ata-SATADOM-SL_3ME_20150429AAAA51522041');
         });
@@ -178,6 +184,7 @@ describe('Install OS Job', function () {
         job._fetchEsxOptionFromRepo = sinon.stub().resolves();
 
         return job._preHandling().then(function() {
+            expect(getInstallDiskSpy).to.have.been.calledOnce;
             expect(job.options.installDisk)
                 .to.equal('t10.ATA_____SATADOM2DSL_3ME__20150429AAAA51522041');
         });
@@ -189,6 +196,7 @@ describe('Install OS Job', function () {
         job._fetchEsxOptionFromRepo = sinon.stub().resolves();
 
         return job._preHandling().then(function() {
+            expect(getInstallDiskSpy).to.have.been.calledOnce;
             expect(job.options.installDisk).to.equal('firstdisk');
         });
     });
@@ -199,7 +207,17 @@ describe('Install OS Job', function () {
         job._fetchEsxOptionFromRepo = sinon.stub().resolves();
 
         return job._preHandling().then(function() {
+            expect(getInstallDiskSpy).to.have.been.calledOnce;
             expect(job.options.installDisk).to.equal('sda');
+        });
+    });
+
+    it("should not find satadom if option installDisk is not empty", function() {
+        job.options.installDisk = 'sda';
+        job._fetchEsxOptionFromRepo = sinon.stub().resolves();
+
+        return job._preHandling().then(function() {
+            expect(getInstallDiskSpy).to.not.have.been.called;
         });
     });
 
