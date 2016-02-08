@@ -302,6 +302,35 @@ describe("Task Parser", function () {
             });
         });
 
+        it("should parse lshw -json when there are multiple nics ", function () {
+            // Test cases where pci network string resembles "network:0", "network:1", etc.
+            // rather than just "network".
+            var lshwCmd = 'sudo lshw -json';
+            var tasks = [
+                {
+                    cmd: lshwCmd,
+                    stdout: stdoutMocks.lshwOutputMultiNic,
+                    stderr: '',
+                    error: null
+                }
+            ];
+
+            return taskParser.parseTasks(tasks)
+            .spread(function (result) {
+                expect(result.error).to.be.undefined;
+                expect(result.store).to.be.true;
+                expect(result.lookups).to.deep.equal(
+                    [
+                        { mac: 'f8:bc:12:0b:0b:40' },
+                        { mac: 'f8:bc:12:0b:0b:41' }
+                    ]
+                );
+                expect(_.isEqual(result.data,
+                    JSON.parse(stdoutMocks.lshwOutputMultiNic))).to.be.true;
+                expect(result.source).to.equal('lshw');
+            });
+        });
+
         describe("lssci parser", function () {
             it("should parse lsscsi and lsblk output", function () {
                 var cmd = 'sudo lsblk -o KNAME,TYPE,ROTA; echo BREAK; sudo lsscsi --size';
