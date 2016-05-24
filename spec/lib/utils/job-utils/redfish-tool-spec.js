@@ -15,7 +15,7 @@ describe('HttpTool', function(){
     before(function(){
         helper.setupInjector([
             helper.require('/lib/utils/job-utils/redfish-tool.js'),
-            helper.require('/lib/utils/job-utils/HTTP-tool.js'),
+            helper.require('/lib/utils/job-utils/http-tool.js'),
             helper.di.simpleWrapper(waterline, 'Services.Waterline')
         ]);
 
@@ -70,6 +70,20 @@ describe('HttpTool', function(){
         });
     });
 
+    it("should do ClientRequest for POST", function(){
+        nock("https://localhost:12345")
+        .post('/happy-post').reply(201, '{"data": "HAPPY"}');
+
+        redfishTool.settings.protocol = 'https';
+        redfishTool.settings.host = 'localhost';
+        redfishTool.settings.port = "12345";
+        redfishTool
+        .clientRequest("/happy-post", 'POST', '{data: "make me happy"}')
+        .then(function(response){
+            expect(response).to.have.property('httpStatusCode').to.equal(201);
+        });
+    });
+
     it("should reject on having http error", function(){
         nock("https://fake:12345")
         .post('/this-should-fail')
@@ -80,8 +94,8 @@ describe('HttpTool', function(){
         redfishTool.settings.port = 12345;
         
         expect(redfishTool
-               .clientRequest('/this-should-fail', 'POST', 'My secret data'))
-               .to.be.eventually.rejectedWith('Unknown Error');
+            .clientRequest('/this-should-fail', 'POST', 'My secret data'))
+        .to.be.rejectedWith('Unknown Error');
     });
 });
 

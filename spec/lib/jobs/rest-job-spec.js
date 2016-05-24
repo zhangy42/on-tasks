@@ -25,9 +25,9 @@ describe("REST-job", function(){
 
     before(function(){
         helper.setupInjector([
-            helper.require('/lib/jobs/REST-job.js'),
+            helper.require('/lib/jobs/rest-job.js'),
             helper.require('/lib/jobs/base-job.js'),
-            helper.require('/lib/utils/job-utils/HTTP-tool.js')
+            helper.require('/lib/utils/job-utils/http-tool.js')
         ]);
         RestJob = helper.injector.get('Job.Rest');
     });
@@ -44,12 +44,12 @@ describe("REST-job", function(){
 
         context = {};
         restJob = new RestJob(options, context, taskId);
+
         restJob.run().then(function(){
             expect(context.restData.httpStatusCode).to.equal(201);
             done();
         });
     });
-
 
     it('Should return with data on bad url', function(done){
         nock(testUrl)
@@ -72,11 +72,9 @@ describe("REST-job", function(){
         options.url = null;
 
         restJob = new RestJob(options, context, taskId);
-        var err1 = 'Please provide at least url and method to use HTTP tool!';
-        var err2 = 'Request is not setup properly, '+
-            'please run setupRequest() first.';
-        expect(restJob._deferred).to.eventually.be.rejectedWith(err1);
-        expect(restJob.run()).to.eventually.be.rejectedWith(err2);
+        var errMsg = 'Please provide at least url and method to use HTTP tool!';
+
+        expect(restJob.run()).to.be.rejectedWith(errMsg);
         done();
     });
 
@@ -85,25 +83,18 @@ describe("REST-job", function(){
         options.method = null;
 
         restJob = new RestJob(options, context, taskId);
-        var err1 = 'Please provide at least url and method to use HTTP tool!';
-        var err2 = 'Request is not setup properly, '+
-            'please run setupRequest() first.';
-        expect(restJob.run()).to.eventually.be.rejectedWith(err2);
-        expect(restJob._deferred).to.eventually.be.rejectedWith(err1);
-
+        var err = 'Please provide at least url and method to use HTTP tool!';
+        expect(restJob.run()).to.eventually.be.rejectedWith(err);
         done();
     });    
-    
+
     it('Should reject on bad method', function(done){
         options.url = testUrl + '/get/good';
         options.method = 'HAPPY';
         
         restJob = new RestJob(options, context, taskId);
-        var err1 = 'The method you provided is not valid!';
-        var err2 = 'Request is not setup properly, '+
-            'please run setupRequest() first.';
-        expect(restJob.run()).to.eventually.be.rejectedWith(err2);
-        expect(restJob._deferred).to.eventually.be.rejectedWith(err1);
+        var err = 'The method you provided is not valid!';
+        expect(restJob.run()).to.eventually.be.rejectedWith(err);
 
         done();
     });

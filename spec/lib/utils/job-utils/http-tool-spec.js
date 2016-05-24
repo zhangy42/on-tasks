@@ -13,7 +13,7 @@ describe("HttpTool", function(){
     before(function(){
         helper.setupInjector(
             _.flattenDeep([
-                helper.require('/lib/utils/job-utils/HTTP-tool.js')
+                helper.require('/lib/utils/job-utils/http-tool.js')
             ])
         );
         var HttpTool = helper.injector.get('JobUtils.HttpTool');
