@@ -28,6 +28,7 @@ describe("HttpTool", function(){
         requestSettings.url = siteGen + '/basicAuth';
         requestSettings.method = 'GET';
         requestSettings.credential = {username:'hello', password:'world'};
+        // requestSettings.data = '{hello: world}';
 
         httpTool.setupRequest(requestSettings)
         .then(httpTool.runRequest()
