@@ -7,7 +7,7 @@
 
 var nock = require('nock');
 
-describe('HttpTool', function(){
+describe('RedfishTool', function(){
     var redfishTool,
         waterline = {}, 
         sandbox = sinon.sandbox.create();
@@ -64,12 +64,10 @@ describe('HttpTool', function(){
         redfishTool.settings.protocol = 'http';
         redfishTool.settings.host = 'fake';
         
-        return redfishTool.clientRequest('/happy', 'GET', '').then(function(res){
-            console.log(res);
+        return redfishTool.clientRequest('/happy', 'GET', '')
+        .then(function(res){
+            expect(res).to.have.property('body').to.have.property('Hello').to.deep.equal('World');
         });
-        
-        // return expect(res).to.have.property('body')
-        //    .to.have.property('Hello').to.deep.equal('World');
     });
 
     it("should do ClientRequest for POST", function(){
@@ -79,8 +77,8 @@ describe('HttpTool', function(){
         redfishTool.settings.protocol = 'https';
         redfishTool.settings.host = 'localhost';
         redfishTool.settings.port = "12345";
-        redfishTool
-        .clientRequest("/happy-post", 'POST', '{data: "make me happy"}')
+
+        return redfishTool.clientRequest("/happy-post", 'POST', '{data: "make me happy"}')
         .then(function(response){
             expect(response).to.have.property('httpStatusCode').to.equal(201);
         });
@@ -95,7 +93,7 @@ describe('HttpTool', function(){
         redfishTool.settings.host = 'fake';
         redfishTool.settings.port = 12345;
         
-        expect(redfishTool
+        return expect(redfishTool
             .clientRequest('/this-should-fail', 'POST', 'My secret data'))
         .to.be.rejectedWith('Unknown Error');
     });
