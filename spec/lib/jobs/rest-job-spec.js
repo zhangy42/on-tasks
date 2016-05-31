@@ -18,7 +18,7 @@ describe("REST-job", function(){
             headers: {
                 "content-type": "application/json",
                 "some-token": "whatever-ssl-token"
-                },
+            },
             data: "nobody cares"
         },
         context = {};
