@@ -38,25 +38,25 @@ describe('RedfishTool', function(){
         sandbox.restore();
     });
 
-    it("should setup settings", function() {    
-        return redfishTool.setup('abc')    
-        .then(function() {    
-            expect(waterline.nodes.needByIdentifier)    
-                .to.be.calledOnce;    
-            return;    
-        })    
-        .then(function() {    
-            expect(redfishTool.settings).to.deep.equal({    
-                uri: 'http://fake'    
-            });    
-        });    
-    });    
+    it("should setup settings", function() {
+        return redfishTool.setup('abc')
+        .then(function() {
+            expect(waterline.nodes.needByIdentifier)
+                .to.be.calledOnce;
+            return;
+        })
+        .then(function() {
+            expect(redfishTool.settings).to.deep.equal({
+                uri: 'http://fake'
+            });
+        });
+    });
             
-    it("should fail to setup settings", function() {    
+    it("should fail to setup settings", function() {
         waterline.nodes.needByIdentifier = sandbox.stub()
-            .resolves({obmSettings:[]});    
+            .resolves({obmSettings:[]});
         return expect(redfishTool.setup('abc'))
-            .to.be.rejectedWith('Failed to find Redfish settings');    
+            .to.be.rejectedWith('Failed to find Redfish settings');
     });
 
     it("should do ClientRequest on good setup", function(){
