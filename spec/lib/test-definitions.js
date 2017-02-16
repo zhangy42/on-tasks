@@ -285,9 +285,9 @@ module.exports.get = function() {
             }
         ]
     };
-    var graphWaitOnEitherTasks = {
-        injectableName: 'Graph.waitOnEitherTasks',
-        friendlyName: 'Graph has tasks under waitOn.either',
+    var graphWaitOnAnyTasks = {
+        injectableName: 'Graph.waitOnAnyTasks',
+        friendlyName: 'Graph has tasks under waitOn.anyOf',
         tasks: [
             {
                 label: 'task-1',
@@ -329,7 +329,7 @@ module.exports.get = function() {
                     properties: {},
                     waitOn:{
                         'task-1': 'finished',
-                        'either': {
+                        'anyOf': {
                             'task-2': 'finished',
                             'task-3': 'failed'
                         }
@@ -354,6 +354,6 @@ module.exports.get = function() {
         graphDefinitionValid: graphDefinitionValid,
         graphDefinitionInvalid: graphDefinitionInvalid,
         graphDefinitionOptions: graphDefinitionOptions,
-        graphWaitOnEitherTasks: graphWaitOnEitherTasks
+        graphWaitOnAnyTasks: graphWaitOnAnyTasks
     };
 };

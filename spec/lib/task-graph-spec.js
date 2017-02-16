@@ -517,11 +517,11 @@ describe('Task Graph', function () {
             });
         });
 
-        it('should create task with waitOn.either', function(){
-            return TaskGraph.create('domain', {definition: definitions.graphWaitOnEitherTasks})
+        it('should create task with waitOn.anyOf', function(){
+            return TaskGraph.create('domain', {definition: definitions.graphWaitOnAnyTasks})
             .then(function(graph){
                 var taskList = graph.definition.tasks;
-                expect(Object.keys(taskList[3].taskDefinition.waitOn.either).length).to.equal(2);
+                expect(Object.keys(taskList[3].taskDefinition.waitOn.anyOf).length).to.equal(2);
             });
         });
     });
